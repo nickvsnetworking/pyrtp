@@ -21,8 +21,10 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
 sock.bind(('0.0.0.0', 1447))
 
 
-sequence_number = random.randint(1,9999)
-time_int = random.randint(1,9999)
+#sequence_number = random.randint(1,9999)
+sequence_number = 54321
+#time_int = random.randint(1,9999)
+time_int = 12345
 
 while packets != 0:
 
@@ -30,12 +32,13 @@ while packets != 0:
     packets = packets - 1
     time_int = time_int + 1
     sequence_number = sequence_number + 1
-    rtp_params = {'version' : 2, 'padding' : 0, 'extension' : 0, 'csi_count' : 0, 'marker' : 0, 'payload_type' : 8, 'sequence_number' : sequence_number, 'timestamp' : time_int, 'ssrc' : 185755418}
+    payload = 'd5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5'
+    rtp_params = {'version' : 2, 'padding' : 0, 'extension' : 0, 'csi_count' : 0, 'marker' : 0, 'payload_type' : 8, 'sequence_number' : sequence_number, 'timestamp' : time_int, 'ssrc' : 185755418, 'payload' : payload}
 
     header_hex = pyrtp.GenerateRTPpacket(rtp_params)
     
     sock.sendto(bytes.fromhex(header_hex), (destination, port))
     
-    time.sleep(0.0150)
+    time.sleep(float(packetization * 0.0001))
 sock.close()
 
