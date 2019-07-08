@@ -1,11 +1,11 @@
 
 
-def GenerateRTPpacket(rtp_params):
+def GenerateRTPpacket(packet_vars):
 
     ##Example Usage:
     #payload = 'd5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5'
-    #rtp_params = {'version' : 2, 'padding' : 0, 'extension' : 0, 'csi_count' : 0, 'marker' : 0, 'payload_type' : 8, 'sequence_number' : 306, 'timestamp' : 306, 'ssrc' : 185755418, 'payload' : payload}
-    #GenerateRTPpacket(rtp_params)             #Generates hex to send down the wire
+    #packet_vars = {'version' : 2, 'padding' : 0, 'extension' : 0, 'csi_count' : 0, 'marker' : 0, 'payload_type' : 8, 'sequence_number' : 306, 'timestamp' : 306, 'ssrc' : 185755418, 'payload' : payload}
+    #GenerateRTPpacket(packet_vars)             #Generates hex to send down the wire
 
 
     
@@ -44,6 +44,10 @@ def GenerateRTPpacket(rtp_params):
     
 
 def DecodeRTPpacket(packet_bytes):
+    ##Example Usage:
+    #packet_bytes = '8008d4340000303c0b12671ad5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5'
+    #rtp_params = DecodeRTPpacket(packet_bytes)
+    #Returns dict of variables from packet (packet_vars{})
     packet_vars = {}
     byte1 = packet_bytes[0:2]           #Byte1 as Hex
     byte1 = int(byte1, 16)              #Convert to Int
@@ -58,7 +62,7 @@ def DecodeRTPpacket(packet_bytes):
     byte2 = int(byte2, 16)              #Convert to Int
     byte2 = format(byte2, 'b').zfill(8) #Convert to Binary
     packet_vars['marker'] = int(byte2[0:1])
-    packet_vars['marker'] = int(byte2[1:8], 2)
+    packet_vars['payload_type'] = int(byte2[1:8], 2)
 
     packet_vars['sequence_number'] = int(str(packet_bytes[4:8]), 16)
 
@@ -67,6 +71,7 @@ def DecodeRTPpacket(packet_bytes):
     packet_vars['ssrc'] = int(str(packet_bytes[16:24]), 16)
 
     packet_vars['payload'] = str(packet_bytes[24:])
-    print(packet_vars)
+    return packet_vars
 packet_bytes = '8008d4340000303c0b12671ad5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5'
-DecodeRTPpacket(packet_bytes)
+rtp_params = DecodeRTPpacket(packet_bytes)
+
